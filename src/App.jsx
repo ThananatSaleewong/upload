@@ -24,7 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AppLogin />} />
         <Route path="/register" element={<AppRegister />} />
-        <Route path="/dashboard" element={<AppDashBoard/>} />
+        <Route path="/dashboard" element={<AppDashBoard />} />
         <Route path="*" element={<AppError />} />
       </Routes>
     </div>

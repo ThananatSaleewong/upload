@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 function LoginInput() {
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" method="POST">
       <input
         type="email"
         placeholder="Email address"
@@ -14,9 +14,9 @@ function LoginInput() {
           id="default-checkbox"
           type="checkbox"
           value=""
-          class="w-4 h-4 text-black mr-2 bg-gray-100 border-gray-300 rounded focus:ring-black "
+          className="w-4 h-4 text-black mr-2 bg-gray-100 border-gray-300 rounded focus:ring-black "
         />
-        <span class="text-sm">Remember me</span>
+        <span className="text-sm">Remember me</span>
       </label>
 
       <button type="submit" className="btn-primary">
