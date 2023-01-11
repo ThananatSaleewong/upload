@@ -9,27 +9,24 @@ function AppRegister() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const data = {
-    username: "test_username12",
-    email: "test113@example.com",
+    username: "test_username2",
+    email: "test2@example.com",
     emailVisibility: true,
     password: "12345678",
     passwordConfirm: "12345678",
-    name: "test12",
+    name: "test2",
   };
 
   async function handleOnSubmit() {
     // const record = await pb.collection('users').create(data);
     console.log(email, password, confirmPassword);
     try {
-      const record = await pb
-        .collection("users")
-        .create({email, password, confirmPassword , emailVisibility: true });
+      const record = await pb.collection("users").create({ data });
       // await pb.collection('users').requestVerification('test11@example.com');
     } catch (e) {
       alert(e);
     }
   }
-
 
   return (
     <Layout>
