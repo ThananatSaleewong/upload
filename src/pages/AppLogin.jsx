@@ -1,22 +1,40 @@
 import AppHeader from "../components/login/LoginHeader";
 import AppLayout from "../components/login/LoginLayout";
 import AppInput from "../components/login/LoginInput";
-import PocketBase from "pocketbase";
-
-const pb = new PocketBase("http://127.0.0.1:8090");
-const authData = await pb
-  .collection("users")
-  .authWithPassword("pipe@example.com", "123456789");
-
-console.log(pb.authStore);
-console.log(pb.authStore.token);
-console.log(pb.authStore.model.id);
+import pb from "../lib/pocketbase";
+import { useState } from "react";
 
 function AppLogin() {
+  const isLoggedIn = pb.authStore.isValid;
+  const [isLoading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function login(data) {
+    setLoading(true);
+    console.log(email, password);
+    try {
+      const authData = await pb
+        .collection("users")
+        .authWithPassword(email, password);
+    } catch (e) {
+      alert(e);
+    }
+    setLoading(false);
+  }
+
   return (
     <AppLayout>
+      {isLoading && <p>Loading....</p>}
+      {isLoggedIn ? "True" : "False"}
       <AppHeader />
-      <AppInput />
+      <AppInput
+        email={email}
+        password={password}
+        setPassword={setPassword}
+        setEmail={setEmail}
+        login={login}
+      />
     </AppLayout>
   );
 }

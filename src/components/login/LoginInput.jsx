@@ -1,14 +1,21 @@
 import { NavLink } from "react-router-dom";
 
-function LoginInput() {
+function LoginInput(props) {
+  const { email, setEmail, password, setPassword, login } = props;
   return (
-    <form className="space-y-4" method="POST">
+    <div className="space-y-4" method="POST">
       <input
         type="email"
+        onChange={(e) => setEmail(e.target.value)}
         placeholder="Email address"
         className="input-large "
       />
-      <input type="password" placeholder="Password" className="input-large " />
+      <input
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        className="input-large "
+      />
       <label className="flex items-center">
         <input
           id="default-checkbox"
@@ -18,8 +25,7 @@ function LoginInput() {
         />
         <span className="text-sm">Remember me</span>
       </label>
-
-      <button type="submit" className="btn-primary">
+      <button className="btn-primary" onClick={login}>
         LOGIN
       </button>
       <NavLink to="/register">
@@ -27,7 +33,7 @@ function LoginInput() {
           Not have an account ? <u>Register here</u>
         </p>
       </NavLink>
-    </form>
+    </div>
   );
 }
 
