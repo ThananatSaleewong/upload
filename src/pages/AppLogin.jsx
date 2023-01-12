@@ -31,8 +31,7 @@ function AppLogin() {
   }
   if (isLoggedIn)
     return (
-
-      <AppDashBoard logout={logout}/>
+      <AppDashBoard logout={logout} />
       // <>
       //   <h1>Logged In:{pb.authStore.model.email}</h1>
       //   <button onClick={logout} className="border p-4 bg-slate-100">
