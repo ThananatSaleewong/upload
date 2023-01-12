@@ -6,8 +6,8 @@ function RegisterInput(props) {
     setEmail,
     password,
     setPassword,
-    confirmPassword,
-    setConfirmPassword,
+    passwordConfirm,
+    setPasswordConfirm,
     handleOnSubmit,
   } = props;
   return (
@@ -26,7 +26,7 @@ function RegisterInput(props) {
       />
       <input
         type="password"
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        onChange={(e) => setPasswordConfirm(e.target.value)}
         placeholder="Confirm Password"
         className="input-large "
       />

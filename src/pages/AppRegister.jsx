@@ -6,7 +6,7 @@ import pb from "../lib/pocketbase";
 function AppRegister() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const data = {
     username: "test_username2",
@@ -19,9 +19,12 @@ function AppRegister() {
 
   async function handleOnSubmit() {
     // const record = await pb.collection('users').create(data);
-    console.log(email, password, confirmPassword);
+    console.log(email, password, passwordConfirm);
     try {
-      const record = await pb.collection("users").create({ data });
+      const record = await pb
+        .collection("users")
+        .create({ email, password, passwordConfirm, emailVisibility: true });
+      alert("Registered");
       // await pb.collection('users').requestVerification('test11@example.com');
     } catch (e) {
       alert(e);
@@ -37,8 +40,8 @@ function AppRegister() {
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
-        confirmPassword={confirmPassword}
-        setConfirmPassword={setConfirmPassword}
+        passwordConfirm={passwordConfirm}
+        setPasswordConfirm={setPasswordConfirm}
       />
     </Layout>
   );

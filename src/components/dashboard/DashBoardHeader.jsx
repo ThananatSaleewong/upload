@@ -1,4 +1,5 @@
-function DashBoardHeader() {
+function DashBoardHeader(props) {
+  const { logout } = props;
   return (
     <header className="flex justify-between px-4 py-2 bg-white border-b items-center">
       <div className="flex justify-center items-center space-x-2 cursor-pointer">
@@ -11,6 +12,7 @@ function DashBoardHeader() {
           src="https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-File.png"
         />
       </div>
+      <button onClick={logout}>Logout</button>
     </header>
   );
 }

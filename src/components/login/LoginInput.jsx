@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 function LoginInput(props) {
-  const { email, setEmail, password, setPassword, login } = props;
+  const { email, setEmail, password, setPassword, login, isLoading } = props;
   return (
     <div className="space-y-4" method="POST">
       <input
@@ -25,8 +25,8 @@ function LoginInput(props) {
         />
         <span className="text-sm">Remember me</span>
       </label>
-      <button className="btn-primary" onClick={login}>
-        LOGIN
+      <button className="btn-primary" onClick={login} disabled={isLoading}>
+        {isLoading ? "Loading" : "LOGIN"}
       </button>
       <NavLink to="/register">
         <p className="text-center mt-4 text-sm">
