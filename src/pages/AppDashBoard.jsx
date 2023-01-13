@@ -1,13 +1,13 @@
 import DashboardAddItems from "../components/dashboard/DashboardAddItems";
-import AppDashboardFeed from "../components/dashboard/DashboardFeed";
+import DashboardFeed from "../components/dashboard/DashboardFeed";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 
-function AppDashBoard() {
+function AppDashboard() {
   return (
     <div>
-      <DashBoardHeader />
-      <DashBoardAddItems />
-      <AppDashboardFeed />
+      <DashboardHeader />
+      <DashboardAddItems />
+      <DashboardFeed />
     </div>
   );
 }
