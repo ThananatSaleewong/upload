@@ -1,20 +1,17 @@
-import AppLogin from "./pages/AppLogin";
+import Login from "./pages/Login";
 import { Route, Routes, NavLink } from "react-router-dom";
-import AppRegister from "./pages/AppRegister";
-import AppError from "./pages/AppError";
-import AppDashBoard from "./pages/AppDashBoard";
-
+import Register from "./pages/Register";
+import Error from "./pages/Error";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-
-
   return (
     <div className="h-screen bg-[#F8F9FE]">
       <Routes>
-        <Route path="/" element={<AppLogin />} />
-        <Route path="/register" element={<AppRegister />} />
-        <Route path="/dashboard" element={<AppDashBoard />} />
-        <Route path="*" element={<AppError />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<Error />} />
       </Routes>
     </div>
   );

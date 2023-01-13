@@ -1,15 +1,14 @@
-import DashboardAddItems from "../components/dashboard/DashboardAddItems";
 import DashboardFeed from "../components/dashboard/DashboardFeed";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 
-function AppDashboard() {
+function Dashboard(props) {
+  const { logout } = props;
   return (
     <div>
-      <DashboardHeader />
-      <DashboardAddItems />
+      <DashboardHeader logout={logout} />
       <DashboardFeed />
     </div>
   );
 }
 
-export default AppDashboard;
+export default Dashboard;

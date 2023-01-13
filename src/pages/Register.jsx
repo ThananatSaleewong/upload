@@ -5,7 +5,7 @@ import { useState } from "react";
 import pb from "../lib/pocketbase";
 import { useNavigate } from "react-router-dom";
 
-function AppRegister() {
+function Register() {
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,4 +53,4 @@ function AppRegister() {
   );
 }
 
-export default AppRegister;
+export default Register;

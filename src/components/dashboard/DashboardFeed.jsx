@@ -1,6 +1,16 @@
-function AppDashboardFeed() {
+function DashboardFeed() {
   return (
     <div>
+      <div className="flex items-center justify-center w-full p-4">
+        <label className="flex flex-col items-center justify-center w-full p-4 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 ">
+          <div className="flex flex-col items-center justify-center ">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold">CLICK TO ADD NEW</span>
+            </p>
+          </div>
+          <input type="file" className="hidden" />
+        </label>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-4 p-4">
         <div className="flex justify-between items-center bg-white p-2 border rounded-md">
           <div className="flex">
@@ -37,4 +47,4 @@ function AppDashboardFeed() {
   );
 }
 
-export default AppDashboardFeed;
+export default DashboardFeed;

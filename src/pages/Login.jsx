@@ -1,11 +1,10 @@
-import AppHeader from "../components/login/LoginHeader";
-import AppLayout from "../components/login/LoginLayout";
-import AppInput from "../components/login/LoginInput";
+import LoginHeader from "../components/login/LoginHeader";
+import LoginLayout from "../components/login/LoginLayout";
+import LoginInput from "../components/login/LoginInput";
 import pb from "../lib/pocketbase";
 import { useState } from "react";
-import AppDashBoard from "./AppDashBoard";
-import { useNavigate } from "react-router-dom";
-function AppLogin() {
+import Dashboard from "./Dashboard";
+function Login() {
   const isLoggedIn = pb.authStore.isValid;
   const [isLoading, setLoading] = useState(false);
   const [dummy, setDummy] = useState(0);
@@ -31,7 +30,7 @@ function AppLogin() {
   }
   if (isLoggedIn)
     return (
-      <AppDashBoard logout={logout} />
+      <Dashboard logout={logout} />
       // <>
       //   <h1>Logged In:{pb.authStore.model.email}</h1>
       //   <button onClick={logout} className="border p-4 bg-slate-100">
@@ -41,12 +40,12 @@ function AppLogin() {
     );
 
   return (
-    <AppLayout>
+    <LoginLayout>
       {isLoading && <p className="text-md font-semibold">Loading....</p>}
       {/* <h1>Logged In:{pb.authStore.isValid.toString()}</h1> */}
       {isLoggedIn ? "True" : "False"}
-      <AppHeader />
-      <AppInput
+      <LoginHeader />
+      <LoginInput
         email={email}
         password={password}
         setPassword={setPassword}
@@ -54,8 +53,8 @@ function AppLogin() {
         login={login}
         isLoading={isLoading}
       />
-    </AppLayout>
+    </LoginLayout>
   );
 }
 
-export default AppLogin;
+export default Login;

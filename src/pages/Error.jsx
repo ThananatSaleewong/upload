@@ -1,4 +1,4 @@
-function AppError() {
+function Error() {
   return (
     <div className="grid justify-center items-center h-screen">
       <div className="text-center space-y-4 ">
@@ -12,4 +12,4 @@ function AppError() {
   );
 }
 
-export default AppError;
+export default Error;
