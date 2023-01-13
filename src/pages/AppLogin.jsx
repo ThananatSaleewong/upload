@@ -4,7 +4,7 @@ import AppInput from "../components/login/LoginInput";
 import pb from "../lib/pocketbase";
 import { useState } from "react";
 import AppDashBoard from "./AppDashBoard";
-
+import { useNavigate } from "react-router-dom";
 function AppLogin() {
   const isLoggedIn = pb.authStore.isValid;
   const [isLoading, setLoading] = useState(false);
@@ -42,8 +42,8 @@ function AppLogin() {
 
   return (
     <AppLayout>
-      {isLoading && <p>Loading....</p>}
-      <h1>Logged In:{pb.authStore.isValid.toString()}</h1>
+      {isLoading && <p className="text-md font-semibold">Loading....</p>}
+      {/* <h1>Logged In:{pb.authStore.isValid.toString()}</h1> */}
       {isLoggedIn ? "True" : "False"}
       <AppHeader />
       <AppInput

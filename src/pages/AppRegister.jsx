@@ -3,7 +3,10 @@ import RegisterHeader from "../components/register/RegisterHeader";
 import RegisterInput from "../components/register/RegisterInput";
 import { useState } from "react";
 import pb from "../lib/pocketbase";
+import { useNavigate } from "react-router-dom";
+
 function AppRegister() {
+  let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -25,6 +28,9 @@ function AppRegister() {
         .collection("users")
         .create({ email, password, passwordConfirm, emailVisibility: true });
       alert("Registered");
+
+      return navigate("/");
+
       // await pb.collection('users').requestVerification('test11@example.com');
     } catch (e) {
       alert(e);
