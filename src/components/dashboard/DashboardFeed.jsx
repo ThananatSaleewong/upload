@@ -1,4 +1,32 @@
+import { useState } from "react";
+import pb from "../../lib/pocketbase";
 function DashboardFeed() {
+  const data = {
+    name: "test",
+    description: "test",
+    url: "https://example.com",
+    date: "2022-01-01 10:00:00.123Z",
+    image: "null",
+  };
+  const [file, setFile] = useState();
+  const [image, setImage] = useState();
+
+  // function handleChange(event) {
+  //   setFile(event.target.files[0]);
+  // }
+  // console.log(file);
+
+  async function handleChange(event, image) {
+    setFile(event.target.files[0]);
+    console.log(file);
+    try {
+      const record = await pb.collection("tools").create(image);
+      console.log(image);
+    } catch (e) {
+      alert(e);
+    }
+  }
+
   return (
     <div>
       <div className="flex items-center justify-center w-full p-4">
@@ -8,7 +36,13 @@ function DashboardFeed() {
               <span className="font-semibold">CLICK TO ADD NEW</span>
             </p>
           </div>
-          <input type="file" className="hidden" />
+          <input
+            type="file"
+            className="hidden"
+            name="file"
+            value={image}
+            onChange={handleChange}
+          />
         </label>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 p-4">
