@@ -3,21 +3,28 @@ import { useEffect, useState } from "react";
 import pb from "../../lib/pocketbase";
 import { getImageURL } from "../../lib/utils";
 import React from "react";
-import { Dropdown, Space } from "antd";
+import copy from "copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const items = [
-  {
-    label: <a href="https://www.antgroup.com">copy</a>,
-    key: "0",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: "delete",
-    key: "3",
-  },
-];
+async function clickHandler(targetImg) {
+  const deleteImg = await pb.collection("upload").delete(targetImg);
+  window.location.reload();
+}
+
+function copyUrl(target, title) {
+  toast.success(`${title}copied`, {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  copy(target);
+}
 
 function DashboardFeed() {
   const data = {
@@ -37,7 +44,7 @@ function DashboardFeed() {
   const fetchImageData = async (event) => {
     try {
       const resultList = await pb.collection("upload").getList(1, 20);
-      pb.autoCancellation(false);
+
       console.log(resultList);
       setImageList(resultList);
     } catch (e) {
@@ -45,13 +52,15 @@ function DashboardFeed() {
     }
   };
 
-  async function handleChange(event, image) {
+  async function handleChange(event) {
     const formData = new FormData();
     formData.append("field", event.target.files[0]);
     formData.append("title", event.target.files[0].name);
 
     try {
       const record = await pb.collection("upload").create(formData);
+      window.location.reload();
+      const deleteImg = await pb.collection("upload").delete("");
     } catch (e) {
       alert(e);
     }
@@ -76,6 +85,12 @@ function DashboardFeed() {
       <div className="grid grid-cols-1 md:grid-cols-4 p-4 ">
         {imageList?.items.map((data, index) => (
           <div
+            onClick={() =>
+              copyUrl(
+                getImageURL(data.collectionId, data.id, data.field, 100),
+                data.title
+              )
+            }
             key={index}
             className="flex justify-between items-center bg-white p-2 border rounded-md mr-2 mb-2"
           >
@@ -90,36 +105,11 @@ function DashboardFeed() {
                 {moment(data.created).format("DD/MM/YYYY")}
               </p>
             </div>
-            <Dropdown
-              className=" flex"
-              menu={{
-                items,
-              }}
-              trigger={["click"]}
-            >
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    className="w-5 h-5 cursor-pointer"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                    />
-                  </svg>
-                </Space>
-              </a>
-            </Dropdown>
+            <button onClick={() => clickHandler(data.id)}>Delete</button>
           </div>
         ))}
       </div>
+      <ToastContainer />
     </div>
   );
 }

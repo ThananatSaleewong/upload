@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
 
+
 function App() {
   return (
     <div className="h-screen bg-[#F8F9FE]">
