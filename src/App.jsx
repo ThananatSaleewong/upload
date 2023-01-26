@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <div className="h-screen bg-[#F8F9FE]">
+    <div className="h-screen bg-[#F8F9FE] antialiased">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
