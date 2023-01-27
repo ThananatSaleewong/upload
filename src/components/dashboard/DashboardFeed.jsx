@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import pb from "../../lib/pocketbase";
 import { getImageURL, copyUrl } from "../../lib/utils";
 import React from "react";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Dropdown } from "antd";
@@ -19,6 +18,8 @@ const items = [
     label: <div>Delete</div>,
   },
 ];
+const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
+
 
 export default function DashboardFeed() {
   const data = {
@@ -53,10 +54,10 @@ export default function DashboardFeed() {
 
   async function handleChange(event) {
     const formData = new FormData();
-    const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
     formData.append("field", event.target.files[0]);
     formData.append("title", event.target.files[0].name);
     formData.append("uploader",currentUser.model.id);
+    formData.append("email",currentUser.model.email);
     
     console.log(currentUser)
     
@@ -119,6 +120,7 @@ export default function DashboardFeed() {
                 <p className="text-xs text-gray-400">
                   {moment(data.created).format("DD/MM/YYYY")}
                 </p>
+               <p className="text-xs ">{data.email}</p>
               </div>
             </div>
             <Dropdown
