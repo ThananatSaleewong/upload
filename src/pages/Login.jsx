@@ -27,6 +27,7 @@ function Login() {
   function logout() {
     pb.authStore.clear();
     setDummy(Math.random);
+
   }
   if (isLoggedIn)
     return (
@@ -43,7 +44,7 @@ function Login() {
     <LoginLayout>
       {isLoading && <p className="text-md font-semibold">Loading....</p>}
       {/* <h1>Logged In:{pb.authStore.isValid.toString()}</h1> */}
-      {isLoggedIn ? "True" : "False"}
+      {isLoggedIn ? "True" : "Please logIn"}
       <LoginHeader />
       <LoginInput
         email={email}
