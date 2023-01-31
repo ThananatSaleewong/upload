@@ -64,9 +64,11 @@ export default function DashboardFeed() {
     const formData = new FormData();
     formData.append("field", event.target.files[0]);
     formData.append("title", event.target.files[0].name);
-    formData.append("uploader", currentUser.model.id);
-    formData.append("email", currentUser.model.email);
-    console.log(currentUser);
+    formData.append("uploader",currentUser.model.id);
+    formData.append("email",currentUser.model.email);
+    
+    console.log(currentUser)
+    
 
     try {
       const record = await pb.collection("upload").create(formData);
