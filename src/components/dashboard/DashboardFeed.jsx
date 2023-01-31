@@ -18,8 +18,14 @@ const items = [
     label: <div>Delete</div>,
   },
 ];
-const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
 
+const items1 = [
+  {
+    key: "1",
+    label: <div>Copy</div>,
+  },
+];
+const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
 
 export default function DashboardFeed() {
   const data = {
@@ -45,8 +51,6 @@ export default function DashboardFeed() {
     }
   };
 
-
-
   const handleDeleteImage = async (targetImg) => {
     const deleteImg = await pb.collection("upload").delete(targetImg);
     window.location.reload();
@@ -56,11 +60,10 @@ export default function DashboardFeed() {
     const formData = new FormData();
     formData.append("field", event.target.files[0]);
     formData.append("title", event.target.files[0].name);
-    formData.append("uploader",currentUser.model.id);
-    formData.append("email",currentUser.model.email);
-    
-    console.log(currentUser)
-    
+    formData.append("uploader", currentUser.model.id);
+    formData.append("email", currentUser.model.email);
+
+    console.log(currentUser);
 
     try {
       const record = await pb.collection("upload").create(formData);
@@ -85,6 +88,7 @@ export default function DashboardFeed() {
         theme: "dark",
       });
     }
+
     if (e.key === "2") {
       handleDeleteImage(data.id);
     }
@@ -120,14 +124,21 @@ export default function DashboardFeed() {
                 <p className="text-xs text-gray-400">
                   {moment(data.created).format("DD/MM/YYYY")}
                 </p>
-               <p className="text-xs ">{data.email}</p>
+                <p className="text-xs ">{data.email}</p>
               </div>
             </div>
             <Dropdown
-              menu={{
-                items,
-                onClick: (e) => handleMenuClick(e, data),
-              }}
+              menu={
+                currentUser.model.id === data.uploader
+                  ? {
+                      items: items,
+                      onClick: (e) => handleMenuClick(e, data),
+                    }
+                  : {
+                      items: items1,
+                      onClick: (e) => handleMenuClick(e, data),
+                    }
+              }
               trigger={["click"]}
               className="cursor-pointer"
             >
