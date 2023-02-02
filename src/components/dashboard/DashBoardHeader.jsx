@@ -15,15 +15,6 @@ function DashBoardHeader(props) {
       </div>
       <div className="flex items-center font-medium">
         <p>{currentUser.model.name}</p>
-        <img
-          className="w-10 h-10 rounded-full cursor-pointer"
-          src={getImageURL(
-            currentUser.model.collectionId,
-            currentUser.model.id,
-            currentUser.model.avatar,
-            100
-          )}
-        />
         <button
           onClick={logout}
           className="p-4 bg-red-600 text-white font-semibold rounded-md"

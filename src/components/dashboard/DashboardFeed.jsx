@@ -25,7 +25,9 @@ const items1 = [
     label: <div>Copy</div>,
   },
 ];
+
 const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
+console.log(currentUser)
 
 export default function DashboardFeed() {
   const data = {
@@ -50,8 +52,17 @@ export default function DashboardFeed() {
     try {
       const resultList = await pb.collection("upload").getList(1, 20);
       setImageList(resultList);
-    } catch (e) {
-      alert(e);
+    } catch (err) {
+      toast.success(err, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
@@ -62,7 +73,7 @@ export default function DashboardFeed() {
 
   async function handleChange(event) {
     const formData = new FormData();
-    formData.append("field", event.target.files[0]);
+    formData.append("image", event.target.files[0]);
     formData.append("title", event.target.files[0].name);
     formData.append("uploader",currentUser.model.id);
     formData.append("email",currentUser.model.email);
@@ -72,6 +83,9 @@ export default function DashboardFeed() {
 
     try {
       const record = await pb.collection("upload").create(formData);
+      
+      //1. Diable button
+      //2. Change button content to Loading blah blah
       window.location.reload();
       // const deleteImg = await pb.collection("upload").delete("");
     } catch (e) {
@@ -81,7 +95,7 @@ export default function DashboardFeed() {
 
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
-      copyUrl(getImageURL(data.collectionId, data.id, data.field, 100));
+      copyUrl(getImageURL(data.collectionId, data.id, data.image, 100));
       toast.success(`คัดลอกลิงค์ ${data.title} แล้ว`, {
         position: "bottom-right",
         autoClose: 3000,
@@ -102,8 +116,9 @@ export default function DashboardFeed() {
   return (
     <div className="p-4 space-y-4">
       {/* Dropzone file upload */}
-      <label className="grid place-content-center h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  hover:bg-gray-100 ">
-        <p className="text-sm text-gray-500 font-semibold">CLICK TO ADD NEW</p>
+      <label className="grid place-content-center border border-indigo-600 text-indigo-600 rounded-full cursor-pointer bg-indigo-600/25 hover:bg-indigo-600 hover:text-white fixed right-4 bottom-4 h-20 w-20  
+       ">
+        <p className="text-3xl font-bold leading-3 -mt-2 ">+</p>
         <input
           type="file"
           className="hidden"
@@ -121,13 +136,13 @@ export default function DashboardFeed() {
             <div
               onClick={() =>
                 openInNewTab(
-                  getImageURL(data.collectionId, data.id, data.field, 100)
+                  getImageURL(data.collectionId, data.id, data.image, 100)
                 )
               }
               className="flex gap-2 items-center cursor-pointer "
             >
               <img
-                src={getImageURL(data.collectionId, data.id, data.field, 100)}
+                src={getImageURL(data.collectionId, data.id, data.image, 100)}
                 alt=""
                 className="w-12 h-12 mr-2"
               />
