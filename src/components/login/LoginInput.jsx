@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 function LoginInput(props) {
   const { email, setEmail, password, setPassword, login, isLoading } = props;
   return (
-    <div className="space-y-4" method="POST">
+    <div className="space-y-4" method="POST" onKeyDown={login}>
       <input
         type="email"
         onChange={(e) => setEmail(e.target.value)}

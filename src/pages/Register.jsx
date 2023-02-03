@@ -3,13 +3,14 @@ import RegisterHeader from "../components/register/RegisterHeader";
 import RegisterInput from "../components/register/RegisterInput";
 import { useState } from "react";
 import pb from "../lib/pocketbase";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Register() {
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const isLoggedIn = pb.authStore.isValid;
 
   const data = {
     username: "test_username2",
@@ -19,6 +20,11 @@ function Register() {
     passwordConfirm: "12345678",
     name: "test2",
   };
+
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" />;
+    // <Dashboard logout={logout} />;
+  }
 
   async function handleOnSubmit() {
     // const record = await pb.collection('users').create(data);

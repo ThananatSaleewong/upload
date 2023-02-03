@@ -4,6 +4,7 @@ import LoginInput from "../components/login/LoginInput";
 import pb from "../lib/pocketbase";
 import { useState } from "react";
 import Dashboard from "./Dashboard";
+import { Navigate } from "react-router-dom";
 function Login() {
   const isLoggedIn = pb.authStore.isValid;
   const [isLoading, setLoading] = useState(false);
@@ -11,39 +12,28 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function login(data) {
-    setLoading(true);
-    console.log(email, password);
-    try {
-      const authData = await pb
-        .collection("users")
-        .authWithPassword(email, password);
-    } catch (e) {
-      alert(e);
+  async function login(e) {
+    if (e.code === "Enter" || e.type === 'click') {
+      setLoading(true);
+      console.log(email, password);
+      try {
+        const authData = await pb
+          .collection("users")
+          .authWithPassword(email, password);
+      } catch (e) {
+        alert(e);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   }
 
-  function logout() {
-    pb.authStore.clear();
-    setDummy(Math.random);
-
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" />;
   }
-  if (isLoggedIn)
-    return (
-      <Dashboard logout={logout} />
-      // <>
-      //   <h1>Logged In:{pb.authStore.model.email}</h1>
-      //   <button onClick={logout} className="border p-4 bg-slate-100">
-      //     Logout
-      //   </button>
-      // </>
-    );
 
   return (
     <LoginLayout>
       {isLoading && <p className="text-md font-semibold">Loading....</p>}
-      {/* <h1>Logged In:{pb.authStore.isValid.toString()}</h1> */}
       {isLoggedIn ? "True" : "Please logIn"}
       <LoginHeader />
       <LoginInput
