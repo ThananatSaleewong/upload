@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Dropdown, Pagination, Spin } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 
 const items = [
   {
@@ -27,6 +28,15 @@ const items1 = [
 ];
 
 export default function DashboardFeed(props) {
+
+  const location = useLocation();
+  console.log(location.search);
+
+  const searchParams = new URLSearchParams(document.location.search)
+  console.log(searchParams.get('p'))
+
+
+
   const { currentUser } = props;
   const data = {
     name: "test",
@@ -35,10 +45,9 @@ export default function DashboardFeed(props) {
     date: "2022-01-01 10:00:00.123Z",
     image: "null",
   };
-  
+
   const [imageList, setImageList] = useState(null);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     fetchImageData();
   }, []);
@@ -49,7 +58,7 @@ export default function DashboardFeed(props) {
 
   const fetchImageData = async (event) => {
     try {
-      const resultList = await pb.collection("upload").getList(1,18);
+      const resultList = await pb.collection("upload").getList(1, 18,{sort: '-created'});
       setImageList(resultList);
     } catch (err) {
       toast.success(err, {
@@ -176,9 +185,17 @@ export default function DashboardFeed(props) {
           ))}
         </div>
       </Spin>
-      <ToastContainer />     
-      <Pagination defaultCurrent={1} total={50}
-      className="flex justify-center" />  
-    </div>  
+      <ToastContainer />
+      {/* <Pagination
+        defaultCurrent={1}
+        total={50}
+        className="flex justify-center"
+      /> */}
+      <div className="flex gap-2">
+      <a href="?p=1">Page 1</a>
+      <a href="?p=2">Page 2</a>
+      <a href="?p=3">Page 3</a>
+      </div>
+    </div>
   );
 }
