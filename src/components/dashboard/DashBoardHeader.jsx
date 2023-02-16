@@ -1,4 +1,4 @@
-function DashBoardHeader(props) {
+function DashboardHeader(props) {
   const { logout } = props;
 
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
@@ -24,4 +24,4 @@ function DashBoardHeader(props) {
   );
 }
 
-export default DashBoardHeader;
+export default DashboardHeader;
