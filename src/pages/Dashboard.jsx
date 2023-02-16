@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import DashboardFeed from "../components/dashboard/DashboardFeed";
-import DashboardHeader from "../components/dashboard/DashboardHeader";
+// import DashboardHeader from "../components/dashboard/DashboardHeader";
 import pb from "../lib/pocketbase";
 
 function Dashboard() {
@@ -17,7 +17,7 @@ function Dashboard() {
 
   return (
     <div>
-      <DashboardHeader logout={logout} />
+
       <DashboardFeed currentUser={currentUser} />
     </div>
   );
