@@ -3,7 +3,6 @@ import LoginLayout from "../components/login/LoginLayout";
 import LoginInput from "../components/login/LoginInput";
 import pb from "../lib/pocketbase";
 import { useState } from "react";
-import Dashboard from "./Dashboard";
 import { Navigate } from "react-router-dom";
 function Login() {
   const isLoggedIn = pb.authStore.isValid;

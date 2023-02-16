@@ -1,5 +1,3 @@
-import { getImageURL } from "../../lib/utils";
-
 function DashBoardHeader(props) {
   const { logout } = props;
 

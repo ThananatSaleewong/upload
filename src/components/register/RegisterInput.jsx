@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import Layout from "../Layout";
+
 function RegisterInput(props) {
   const {
     email,
