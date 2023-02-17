@@ -45,7 +45,7 @@ export default function DashboardFeed(props) {
 
   const [imageList, setImageList] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState({ page: 1, pageSize: 12 });
+  const [page, setPage] = useState({ page: 1, pageSize: 24 });
 
   useEffect(() => {
     fetchImageData();
@@ -201,7 +201,7 @@ export default function DashboardFeed(props) {
       <ToastContainer />
       <Pagination
         pageSize={page.pageSize}
-        pageSizeOptions={[12, 24, 48]}
+        pageSizeOptions={[24, 48, 84]}
         total={imageList?.totalItems}
         showSizeChanger
         onChange={onChangePagination}
