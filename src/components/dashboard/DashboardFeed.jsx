@@ -45,19 +45,24 @@ export default function DashboardFeed(props) {
 
   const [imageList, setImageList] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState({ page: 1, pageSize: 12 });
+
   useEffect(() => {
     fetchImageData();
-  }, []);
-
+  }, [page]);
+  console.log(page);
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
   };
 
   const fetchImageData = async (event) => {
+    setLoading(true);
     try {
       const resultList = await pb
         .collection("upload")
-        .getList(1, 18, { sort: "-created" });
+        .getList(page.page, page.pageSize, {
+          sort: "-created",
+        });
       setImageList(resultList);
     } catch (err) {
       toast.success(err, {
@@ -71,13 +76,14 @@ export default function DashboardFeed(props) {
         theme: "dark",
       });
     }
+    setLoading(false);
   };
 
   const handleDeleteImage = async (targetImg) => {
     const deleteImg = await pb.collection("upload").delete(targetImg);
     window.location.reload();
   };
-
+  console.log(imageList);
   async function handleChange(event) {
     const formData = new FormData();
     formData.append("image", event.target.files[0]);
@@ -114,6 +120,14 @@ export default function DashboardFeed(props) {
     if (e.key === "2") {
       handleDeleteImage(data.id);
     }
+  };
+
+  const onChangePagination = (page, pageSize) => {
+    setPage({ ...page, page: page, pageSize: pageSize });
+  };
+
+  const onChangePaginationSize = (current, size) => {
+    setPage({ ...page, page: 1, pageSize: size });
   };
 
   return (
@@ -185,6 +199,14 @@ export default function DashboardFeed(props) {
         </div>
       </Spin>
       <ToastContainer />
+      <Pagination
+        pageSize={page.pageSize}
+        pageSizeOptions={[12, 24, 48]}
+        total={imageList?.totalItems}
+        showSizeChanger
+        onChange={onChangePagination}
+        onShowSizeChange={onChangePaginationSize}
+      />
     </div>
   );
 }
