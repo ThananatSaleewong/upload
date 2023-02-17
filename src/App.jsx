@@ -32,7 +32,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen bg-[#F8F9FE] antialiased">
+    <div className=" bg-[#F8F9FE] antialiased">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
