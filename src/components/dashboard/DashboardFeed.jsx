@@ -97,7 +97,7 @@ export default function DashboardFeed(props) {
       //2. Change button content to Loading blah blah
       window.location.reload();
     } catch (e) {
-      alert(e);
+      alert("validation_file_size_limit");
     }
     setLoading(false);
   }
