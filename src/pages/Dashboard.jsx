@@ -17,7 +17,7 @@ function Dashboard() {
 
   return (
     <div>
-      <header className="flex justify-between px-4 py-2 bg-white border-b items-center">
+      <header className="flex justify-between px-4 py-3 bg-white border-b items-center">
         <div className="flex justify-center items-center space-x-2 cursor-pointer">
           <img src="/image/triangle-logo.png" alt="" className="w-6 h-6" />
           <h1 className="text-2xl font-bold">Spaces</h1>
