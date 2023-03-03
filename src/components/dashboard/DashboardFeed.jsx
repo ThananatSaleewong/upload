@@ -92,12 +92,15 @@ export default function DashboardFeed(props) {
     formData.append("email", currentUser?.model.email);
     setLoading(true);
     try {
-      const record = await pb.collection("upload").create(formData);
+      const res = await pb.collection("upload").create(formData);
       //1. Diable button
       //2. Change button content to Loading blah blah
       window.location.reload();
-    } catch (e) {
-      alert("validation_file_size_limit");
+    } catch (error) {
+      console.log('err:'+ typeof error)
+      console.log(error.data.data.image.message)
+      const errorMessage = error.data.data.image.message || 'Unknown error';
+      alert(errorMessage);
     }
     setLoading(false);
   }
