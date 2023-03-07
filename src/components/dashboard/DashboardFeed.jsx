@@ -29,10 +29,10 @@ const items1 = [
 
 export default function DashboardFeed(props) {
   const location = useLocation();
-  console.log(location.search);
+  // console.log(location.search);
 
   const searchParams = new URLSearchParams(document.location.search);
-  console.log(searchParams.get("p"));
+  // console.log(searchParams.get("p"));
 
   const { currentUser } = props;
   const data = {
@@ -50,7 +50,6 @@ export default function DashboardFeed(props) {
   useEffect(() => {
     fetchImageData();
   }, [page]);
-  console.log(page);
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
   };
@@ -83,7 +82,7 @@ export default function DashboardFeed(props) {
     const deleteImg = await pb.collection("upload").delete(targetImg);
     window.location.reload();
   };
-  console.log(imageList);
+  // console.log(imageList);
   async function handleChange(event) {
     const formData = new FormData();
     formData.append("image", event.target.files[0]);
@@ -97,9 +96,9 @@ export default function DashboardFeed(props) {
       //2. Change button content to Loading blah blah
       window.location.reload();
     } catch (error) {
-      console.log('err:'+ typeof error)
-      console.log(error.data.data.image.message)
-      const errorMessage = error.data.data.image.message || 'Unknown error';
+      // console.log("err:" + typeof error);
+      // console.log(error.data.data.image.message);
+      const errorMessage = error.data.data.image.message || "Unknown error";
       alert(errorMessage);
     }
     setLoading(false);
