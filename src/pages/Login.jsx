@@ -12,13 +12,14 @@ function Login() {
   const [password, setPassword] = useState("");
 
   async function login(e) {
-    if (e.code === "Enter" || e.type === 'click') {
+    if (e.code === "Enter" || e.type === "click") {
       setLoading(true);
       console.log(email, password);
       try {
         const authData = await pb
           .collection("users")
-          .authWithPassword(email, password);
+          .authWithPassword(email, password)
+          .authRefresh(authStore.token);
       } catch (e) {
         alert(e);
       }

@@ -82,7 +82,7 @@ export default function DashboardFeed(props) {
     const deleteImg = await pb.collection("upload").delete(targetImg);
     // window.location.reload();
   };
-  // console.log(imageList);
+  console.log(imageList);
   async function handleChange(event) {
     const formData = new FormData();
     formData.append("image", event.target.files[0]);
@@ -94,10 +94,8 @@ export default function DashboardFeed(props) {
       const res = await pb.collection("upload").create(formData);
       //1. Diable button
       //2. Change button content to Loading blah blah
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
-      // console.log("err:" + typeof error);
-      // console.log(error.data.data.image.message);
       const errorMessage = error.data.data.image.message || "Unknown error";
       alert(errorMessage);
     }
