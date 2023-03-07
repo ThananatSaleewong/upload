@@ -5,9 +5,7 @@ import pb from "../lib/pocketbase";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 function Login() {
-  const isLoggedIn = pb.authStore.isValid;
   const [isLoading, setLoading] = useState(false);
-  const [dummy, setDummy] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,23 +16,22 @@ function Login() {
       try {
         const authData = await pb
           .collection("users")
-          .authWithPassword(email, password)
-          .authRefresh(authStore.token);
+          .authWithPassword(email, password);
       } catch (e) {
-        alert(e);
+        console.log(e);
+        // alert(e);
       }
       setLoading(false);
     }
   }
 
-  if (isLoggedIn) {
+  if (pb.authStore.isValid) {
     return <Navigate to="/dashboard" />;
   }
 
   return (
     <LoginLayout>
       {isLoading && <p className="text-md font-semibold">Loading....</p>}
-      {isLoggedIn ? "True" : "Please logIn"}
       <LoginHeader />
       <LoginInput
         email={email}

@@ -11,16 +11,18 @@ import Register from "./pages/Register";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
 import pb from "./lib/pocketbase";
+import { useEffect } from "react";
+console.log("middileware work");
 
 function App() {
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
-  const isLoggedIn = pb.authStore.isValid;
   let navigate = useNavigate();
 
   function RequireAuth({ children }) {
     let location = useLocation();
 
-    if (!isLoggedIn) {
+    if (!pb.authStore.isValid) {
+      console.log("pbauthstore is unvalid");
       // Redirect them to the /login page, but save the current location they were
       // trying to go to when they were redirected. This allows us to   send them
       // along to that page after they login, which is a nicer user experience
@@ -30,7 +32,9 @@ function App() {
 
     return children;
   }
-
+  // useEffect(() => {
+  //   pb.authStore.clear();
+  // }, []);
   return (
     <div className=" bg-[#F8F9FE] antialiased">
       <Routes>
