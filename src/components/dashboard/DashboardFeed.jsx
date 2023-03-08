@@ -144,6 +144,7 @@ export default function DashboardFeed(props) {
             disabled={loading}
             className="hidden"
             onChange={(event) => handleChange(event)}
+            accept="image/png, image/jpg, image/jpeg, image/gif, image/webp, image/svg"
           />
         </label>
 
