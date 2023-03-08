@@ -11,8 +11,7 @@ import Register from "./pages/Register";
 import Error from "./pages/Error";
 import Dashboard from "./pages/Dashboard";
 import pb from "./lib/pocketbase";
-import { useEffect } from "react";
-console.log("middileware work");
+import { Toaster, toast } from "react-hot-toast";
 
 function App() {
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
@@ -33,11 +32,9 @@ function App() {
 
     return children;
   }
-  // useEffect(() => {
-  //   pb.authStore.clear();
-  // }, []);
   return (
     <div className=" bg-[#F8F9FE] antialiased">
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
