@@ -4,6 +4,7 @@ import RegisterInput from "../components/register/RegisterInput";
 import { useState } from "react";
 import pb from "../lib/pocketbase";
 import { Navigate, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 function Register() {
   let navigate = useNavigate();
@@ -33,7 +34,7 @@ function Register() {
       const record = await pb
         .collection("users")
         .create({ email, password, passwordConfirm, emailVisibility: true });
-      alert("Registered");
+      toast.success("Registered");
 
       return navigate("/");
 

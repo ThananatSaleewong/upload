@@ -4,6 +4,8 @@ import LoginInput from "../components/login/LoginInput";
 import pb from "../lib/pocketbase";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+
 function Login() {
   const [isLoading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -18,8 +20,8 @@ function Login() {
           .collection("users")
           .authWithPassword(email, password);
       } catch (e) {
-        console.log(e);
-        // alert(e);
+        toast.error(e?.message);
+        console.log(e.data);
       }
       setLoading(false);
     }
