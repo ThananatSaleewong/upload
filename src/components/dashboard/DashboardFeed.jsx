@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import pb from "../../lib/pocketbase";
 import { getImageURL, copyUrl } from "../../lib/utils";
 import React from "react";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Dropdown, Pagination, Spin } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const items = [
   {
@@ -80,9 +80,9 @@ export default function DashboardFeed(props) {
 
   const handleDeleteImage = async (targetImg) => {
     const deleteImg = await pb.collection("upload").delete(targetImg);
+
     window.location.reload();
   };
-  console.log(imageList);
   async function handleChange(event) {
     const formData = new FormData();
     formData.append("image", event.target.files[0]);
@@ -91,13 +91,21 @@ export default function DashboardFeed(props) {
     formData.append("email", currentUser?.model.email);
     setLoading(true);
     try {
-      const res = await pb.collection("upload").create(formData);
+      // const res = await pb.collection("upload").create(formData);
+      toast.promise(pb.collection("upload").create(formData), {
+        loading: <b>Uplaoding ...</b>,
+        success: <b>Image was uploaded</b>,
+        error: (err) => `Error: ${err}`,
+      });
       //1. Diable button
       //2. Change button content to Loading blah blah
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       const errorMessage = error.data.data.image.message || "Unknown error";
-      alert(errorMessage);
+      toast.error(errorMessage, {
+        duration: 3000,
+        className: "bg-red-100 p-4 font-semebold",
+      });
     }
     setLoading(false);
   }
@@ -199,7 +207,7 @@ export default function DashboardFeed(props) {
           ))}
         </div>
       </Spin>
-      <ToastContainer />
+
       <Pagination
         pageSize={page.pageSize}
         pageSizeOptions={[24, 48, 84]}
