@@ -80,7 +80,7 @@ export default function DashboardFeed(props) {
 
   const handleDeleteImage = async (targetImg) => {
     const deleteImg = await pb.collection("upload").delete(targetImg);
-    // window.location.reload();
+    window.location.reload();
   };
   console.log(imageList);
   async function handleChange(event) {
