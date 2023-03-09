@@ -16,14 +16,21 @@ function LoginInput(props) {
         placeholder="Password"
         className="input-large "
       />
-      <label className="flex items-center">
-        <input
-          id="default-checkbox"
-          type="checkbox"
-          value=""
-          className="w-4 h-4 text-black mr-2 bg-gray-100 border-gray-300 rounded focus:ring-black "
-        />
-        <span className="text-sm">Remember me</span>
+      <label className="flex items-center justify-between">
+        <div>
+          {/* <input
+            id="default-checkbox"
+            type="checkbox"
+            value=""
+            className="w-4 h-4 text-black mr-2 bg-gray-100 border-gray-300 rounded focus:ring-black "
+          />
+          <span className="text-sm">Remember me</span> */}
+        </div>
+        <NavLink to="forgotpassword">
+          <div className="text-sm cursor-pointer hover:underline">
+            Forgotten password ?
+          </div>
+        </NavLink>
       </label>
       <button className="btn-primary" onClick={login} disabled={isLoading}>
         {isLoading ? "Loading" : "LOGIN"}
