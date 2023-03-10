@@ -1,8 +1,10 @@
+import { getImageURL } from "../../lib/utils";
+
 function DashboardHeader(props) {
   const { logout } = props;
 
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
-
+  console.log(currentUser);
   // console.log(currentUser);
 
   return (
