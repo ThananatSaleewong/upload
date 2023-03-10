@@ -1,31 +1,24 @@
+import { Input } from "antd";
 import { NavLink } from "react-router-dom";
 
 function LoginInput(props) {
   const { email, setEmail, password, setPassword, login, isLoading } = props;
   return (
     <div className="space-y-4" method="POST" onKeyDown={login}>
-      <input
-        type="email"
+      <Input
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email address"
-        className="input-large "
+        placeholder="Email"
+        className="input-large"
+        size="large"
       />
-      <input
-        type="password"
+      <Input.Password
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
-        className="input-large "
+        className="input-large"
+        size="large"
       />
       <label className="flex items-center justify-between">
-        <div>
-          {/* <input
-            id="default-checkbox"
-            type="checkbox"
-            value=""
-            className="w-4 h-4 text-black mr-2 bg-gray-100 border-gray-300 rounded focus:ring-black "
-          />
-          <span className="text-sm">Remember me</span> */}
-        </div>
+        <div></div>
         <NavLink to="forgotpassword">
           <div className="text-sm cursor-pointer hover:underline">
             Forgotten password ?
