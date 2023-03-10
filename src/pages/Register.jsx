@@ -24,7 +24,6 @@ function Register() {
 
   if (isLoggedIn) {
     return <Navigate to="/dashboard" />;
-    // <Dashboard logout={logout} />;
   }
 
   async function handleOnSubmit() {
