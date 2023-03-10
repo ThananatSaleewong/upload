@@ -1,3 +1,5 @@
+import { Input } from "antd";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 function RegisterInput(props) {
@@ -10,27 +12,27 @@ function RegisterInput(props) {
     setPasswordConfirm,
     handleOnSubmit,
   } = props;
+  const [passwordVisible, setPasswordVisible] = useState(false);
   return (
     <div className="space-y-4">
-      <input
-        type="email"
+      <Input
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email address"
-        className="input-large "
+        placeholder="Email"
+        className="input-large"
+        size="large"
       />
-      <input
-        type="password"
+      <Input.Password
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
-        className="input-large "
+        className="input-large"
+        size="large"
       />
-      <input
-        type="password"
+      <Input.Password
         onChange={(e) => setPasswordConfirm(e.target.value)}
         placeholder="Confirm Password"
-        className="input-large "
+        className="input-large"
+        size="large"
       />
-
       <button onClick={handleOnSubmit} className="btn-primary">
         REGISTER
       </button>
