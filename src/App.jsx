@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import pb from "./lib/pocketbase";
 import { Toaster, toast } from "react-hot-toast";
 import ForgotPassword from "./pages/ForgotPassword";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
@@ -48,6 +49,7 @@ function App() {
         />
         <Route path="/register" element={<Register />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/editprofile" element={<EditProfile />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </div>
