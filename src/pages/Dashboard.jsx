@@ -1,6 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Space } from "antd";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import DashboardFeed from "../components/dashboard/DashboardFeed";
 import pb from "../lib/pocketbase";
+import { getImageURL } from "../lib/utils";
 
 function Dashboard() {
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
@@ -14,6 +17,27 @@ function Dashboard() {
     return navigate("/");
   }
 
+  const items = [
+    {
+      label: (
+        <div>
+          <NavLink to="">Edit Profile</NavLink>
+        </div>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+        <button
+          onClick={logout}
+          className="w-full py-2 bg-red-600 text-white font-semibold rounded-md"
+        >
+          Logout
+        </button>
+      ),
+      key: "1",
+    },
+  ];
   return (
     <div>
       <header className="flex justify-between px-4 py-3 bg-white border-b items-center">
@@ -21,15 +45,25 @@ function Dashboard() {
           <img src="/image/triangle-logo.png" alt="" className="w-6 h-6" />
           <h1 className="text-2xl font-bold">Spaces</h1>
         </div>
-        <div className="flex items-center font-medium">
-          <p>{currentUser.model.name}</p>
-          <button
-            onClick={logout}
-            className="p-4 bg-red-600 text-white font-semibold rounded-md"
-          >
-            Logout
-          </button>
-        </div>
+        <Dropdown menu={{ items }} trigger={["click"]}>
+          <a onClick={(e) => e.preventDefault()}>
+            <Space className="flex items-center font-medium">
+              <div className="flex items-center gap-2">
+                <img
+                  src={getImageURL(
+                    currentUser.model.collectionId,
+                    currentUser.model.id,
+                    currentUser.model.avatar
+                  )}
+                  alt=""
+                  className="w-12 h-12 rounded-full"
+                />
+                <p>{currentUser.model.name}</p>
+              </div>
+              <DownOutlined />
+            </Space>
+          </a>
+        </Dropdown>
       </header>
       <DashboardFeed currentUser={currentUser} />
     </div>
