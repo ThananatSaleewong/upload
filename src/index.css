@@ -8,6 +8,6 @@
   }
 
   .input-large {
-    @apply block p-3 w-full border rounded-md;
+    @apply w-[520px] py-3;
   }
 }
