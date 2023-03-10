@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
+    "@heroicons/react": "^2.0.16",
     "antd": "^5.1.6",
     "copy-to-clipboard": "^3.3.3",
     "moment": "^2.29.4",
