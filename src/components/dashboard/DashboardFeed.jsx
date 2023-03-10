@@ -47,7 +47,7 @@ export default function DashboardFeed(props) {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState({ page: 1, pageSize: 24 });
   // const { toasts, handlers } = useToast();
-  console.log(imageList);
+  // console.log(imageList);
   useEffect(() => {
     fetchImageData();
   }, [page]);
