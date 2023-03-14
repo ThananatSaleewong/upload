@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Navigate, NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import pb from "../lib/pocketbase";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
-
+  let navigate = useNavigate();
   async function sendEmailRequest(e) {
     console.log(email);
     try {
@@ -13,6 +13,7 @@ function ForgotPassword() {
         .collection("users")
         .requestPasswordReset(email);
       toast.success("Email was send !");
+      return navigate("/");
       console.log(passwordReset);
     } catch (error) {
       toast.error(`Email ${error.data.data.email.message}`);
