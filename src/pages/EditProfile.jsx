@@ -1,74 +1,121 @@
-import LoginHeader from "../components/login/LoginHeader";
-import { ArrowUturnLeftIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { PencilIcon } from "@heroicons/react/24/solid";
 import pb from "../lib/pocketbase";
+import { useEffect, useState } from "react";
 import { getImageURL } from "../lib/utils";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Input } from "antd";
+import EditProfileHeader from "../components/editprofile/EditProfileHeader";
 
 function EditProfile() {
-  const isLoggedIn = pb.authStore.isValid;
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
-  console.log(currentUser, isLoggedIn);
-  console.log(currentUser.model.email);
+  const isLoggedIn = pb.authStore.isValid;
+  const [user, setUser] = useState({ name: "", email: "" });
+  const [filePreview, setFilePreview] = useState(null);
+  let navigate = useNavigate();
 
-  async function handleChange(event) {
+  useEffect(() => {
+    setUser(currentUser.model);
+    setFilePreview(
+      getImageURL(
+        currentUser.model.collectionId,
+        currentUser.model.id,
+        currentUser.model.avatar,
+        100
+      )
+    );
+  }, []);
+
+  async function onSubmit() {
+    console.log(user);
+    const formData = new FormData();
+    formData.append("avatar", user.avatar);
+    formData.append("name", user.name);
+    formData.append("email", user.email);
     try {
-      const record = await pb.collection("users").update("avatar", currentUser);
-      console.log(event);
+      const record = await pb
+        .collection("users")
+        .update(currentUser.model.id, formData);
+      console.log(record);
+      return navigate("/dashboard");
     } catch (e) {
-      console.log(e);
+      alert(e);
+    }
+  }
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    // console.log(e.target.files);
+    // const userValue = null;
+    // userValue = user;
+    // userValue.e.target.name = e.target.value
+    // user = userValue;
+    // setUser(user)
+    if (name === "avatar") {
+      setFilePreview(URL.createObjectURL(e.target.files[0]));
+      setUser({ ...user, [name]: e.target.files[0] });
+    } else {
+      setUser({ ...user, [name]: value });
     }
   }
 
   return (
-    <div className="grid justify-center items-center h-screen">
-      <div className="bg-white rounded-lg border shadow-md p-4 space-y-4 w-[540px] ">
-        <LoginHeader />
+    <div className="">
+      <EditProfileHeader />
+      <div className="p-4 max-w-[520px] mx-auto h-screen">
         <div className="grid grid-cols gap-4">
-          <NavLink to="/dashboard">
-            <ArrowUturnLeftIcon className="w-8 h-8" />
-          </NavLink>
+          {/* <NavLink to="/dashboard">
+            <p className="font-semibold hover:underline">Back</p>
+          </NavLink> */}
           <p className="text-xl font-semibold">Edit Profile</p>
           <div className="flex gap-8">
             <div className="relative w-1/3">
               <img
-                src={getImageURL(
-                  currentUser.model.collectionId,
-                  currentUser.model.id,
-                  currentUser.model.avatar
-                )}
+                src={filePreview}
                 alt=""
                 className="w-36 h-36 rounded-full"
               />
               <div className="w-fit rounded-full p-1 bg-blue-500 absolute bottom-0 right-3">
-                <label className="">
+                <label className=" cursor-pointer">
                   <PencilIcon className="h-6 w-6 text-white" />
                   <input
                     type="file"
                     className="hidden"
-                    onChange={(event) => handleChange(event)}
+                    onChange={handleChange}
+                    name="avatar"
                   />
                 </label>
               </div>
             </div>
             <div className="w-2/3">
               <p className="text-lg font-semibold">username:</p>
-              <input
+              <Input
                 type="text"
-                placeholder=""
+                placeholder="create your username"
                 className="py-2 px-4 border rounded-lg w-full"
-                value={currentUser.model.username}
+                value={user.name}
+                name="name"
+                onChange={handleChange}
               />
               <p className="text-lg font-semibold">email:</p>
-              <div className="px-4 py-2 ">{currentUser.model.email}</div>
+              <Input
+                type="text"
+                placeholder=""
+                className="py-2 px-4  border rounded-lg w-full"
+                value={user.email}
+                name="email"
+                readOnly
+              />
             </div>
           </div>
-          <button className="bg-blue-500 py-2 rounded-lg font-semibold hover:bg-blue-700">
-            Save
+          <button
+            onClick={onSubmit}
+            className="bg-blue-500 py-2 rounded-lg font-semibold hover:bg-blue-700 hover:text-white"
+          >
+            SAVE
           </button>
         </div>
       </div>
     </div>
   );
 }
-
 export default EditProfile;

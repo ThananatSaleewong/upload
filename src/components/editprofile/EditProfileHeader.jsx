@@ -1,47 +1,27 @@
-import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
-import DashboardFeed from "../components/dashboard/DashboardFeed";
-import pb from "../lib/pocketbase";
-import { getImageURL } from "../lib/utils";
+import pb from "../../lib/pocketbase";
+import { getImageURL } from "../../lib/utils";
+import { DownOutlined } from "@ant-design/icons";
 
-function Dashboard() {
+function EditProfileHeader() {
   const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
   const isLoggedIn = pb.authStore.isValid;
   let navigate = useNavigate();
-  console.log(currentUser, isLoggedIn);
-
-  async function logout() {
-    console.log("work");
-    await pb.authStore.clear();
-    return navigate("/");
-  }
-  async function goEditProfile() {
+  async function goDashboard() {
     await isLoggedIn;
-    return navigate("/editprofile");
+    return navigate("/dashboard");
   }
   const items = [
     {
       label: (
-        <div onClick={goEditProfile}>
-          <NavLink to="">Edit Profile</NavLink>
+        <div onClick={goDashboard}>
+          <NavLink to="">Dashboard</NavLink>
         </div>
       ),
       key: "0",
     },
-    {
-      label: (
-        <button
-          onClick={logout}
-          className="w-full py-2 bg-red-600 text-white font-semibold rounded-md"
-        >
-          Logout
-        </button>
-      ),
-      key: "1",
-    },
   ];
-
   return (
     <div>
       <header className="flex justify-between px-4 py-3 bg-white border-b items-center">
@@ -73,9 +53,7 @@ function Dashboard() {
           </a>
         </Dropdown>
       </header>
-      <DashboardFeed currentUser={currentUser} />
     </div>
   );
 }
-
-export default Dashboard;
+export default EditProfileHeader;

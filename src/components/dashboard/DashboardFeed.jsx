@@ -92,7 +92,6 @@ export default function DashboardFeed(props) {
       });
     }
     toast.dismiss(toastId);
-    // window.location.reload();
   };
   async function handleChange(event) {
     console.log(event.target.files);
@@ -111,7 +110,6 @@ export default function DashboardFeed(props) {
         toast.success("Successfully toasted!");
         //1. Diable button
         //2. Change button content to Loading blah blah
-        // window.location.reload();
         await fetchImageData();
       } catch (error) {
         console.log(error);
