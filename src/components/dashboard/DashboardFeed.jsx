@@ -1,7 +1,7 @@
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import pb from "../../lib/pocketbase";
-import { getImageURL, copyUrl } from "../../lib/utils";
+import { getImageURL, copyUrl, getImageURLFull } from "../../lib/utils";
 import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { Dropdown, Pagination, Spin } from "antd";
@@ -60,7 +60,7 @@ export default function DashboardFeed(props) {
     try {
       const resultList = await pb
         .collection("upload")
-        .getList(page.page, page.pageSize, {
+        .getList(page.page, page.pageSize,{
           sort: "-created",
         });
       setImageList(resultList);
@@ -126,7 +126,7 @@ export default function DashboardFeed(props) {
 
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
-      copyUrl(getImageURL(data.collectionId, data.id, data.image));
+      copyUrl(getImageURLFull(data.collectionId, data.id, data.image));
       toast.success(`คัดลอกลิงค์ ${data.title} แล้ว`, {
         position: "bottom-right",
         autoClose: 3000,
@@ -185,7 +185,7 @@ export default function DashboardFeed(props) {
               className="flex gap-2 items-center cursor-pointer "
             >
               <img
-                src={getImageURL(data.collectionId, data.id, data.image)}
+                src={getImageURL(data.collectionId, data.id, data.image,100)}
                 alt=""
                 className="w-36 h-36 mr-2"
               />
