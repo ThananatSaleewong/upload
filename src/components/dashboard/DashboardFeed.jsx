@@ -126,7 +126,7 @@ export default function DashboardFeed(props) {
 
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
-      copyUrl(getImageURL(data.collectionId, data.id, data.image, 100));
+      copyUrl(getImageURL(data.collectionId, data.id, data.image));
       toast.success(`คัดลอกลิงค์ ${data.title} แล้ว`, {
         position: "bottom-right",
         autoClose: 3000,
@@ -179,13 +179,13 @@ export default function DashboardFeed(props) {
             <div
               onClick={() =>
                 openInNewTab(
-                  getImageURL(data.collectionId, data.id, data.image, 100)
+                  getImageURL(data.collectionId, data.id, data.image)
                 )
               }
               className="flex gap-2 items-center cursor-pointer "
             >
               <img
-                src={getImageURL(data.collectionId, data.id, data.image, 100)}
+                src={getImageURL(data.collectionId, data.id, data.image)}
                 alt=""
                 className="w-36 h-36 mr-2"
               />
