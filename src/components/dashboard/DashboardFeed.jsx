@@ -93,10 +93,12 @@ export default function DashboardFeed(props) {
     }
     toast.dismiss(toastId);
   };
+  
   async function handleChange(event) {
-    console.log(event.target.files);
+    
+    console.log(event.target.files.fileList);
     const { files } = event.target;
-    if (files.length !== 0) {
+    if ( files.length === 1) {
       const toastId = toast.loading("Loading...");
       const formData = new FormData();
       formData.append("image", files[0]);
@@ -105,6 +107,7 @@ export default function DashboardFeed(props) {
       formData.append("email", currentUser?.model.email);
       setLoading(true);
       toastId;
+      console.log(formData)
       try {
         const res = await pb.collection("upload").create(formData);
         toast.success("Successfully toasted!");
@@ -121,6 +124,35 @@ export default function DashboardFeed(props) {
       }
       setLoading(false);
       toast.dismiss(toastId);
+    }
+    if(files.length > 1){
+      Array.from(files).map((data, index) =>{
+        console.log(data)
+        const toastId = toast.loading("Loading...");
+        const formData = new FormData();
+        formData.append("image", files[index]);
+        formData.append("title", files[index].name);
+        formData.append("uploader", currentUser?.model.id);
+        formData.append("email", currentUser?.model.email);
+        setLoading(true);
+        toastId;
+        try {
+          const res = pb.collection("upload").create(formData);
+          toast.success("Successfully toasted!");
+          //1. Diable button
+          //2. Change button content to Loading blah blah
+           fetchImageData();
+        } catch (error) {
+          console.log(error);
+          const errorMessage = error.data.data.image.message || "Unknown error";
+          toast.error(errorMessage, {
+            duration: 3000,
+            className: "bg-red-100 p-4 font-semebold",
+          });
+        }
+        setLoading(false);
+        toast.dismiss(toastId);
+      })
     }
   }
 
@@ -166,6 +198,7 @@ export default function DashboardFeed(props) {
           className="hidden"
           onChange={(event) => handleChange(event)}
           accept="image/png, image/jpg, image/jpeg, image/gif, image/webp, image/svg"
+          multiple
         />
       </label>
 
@@ -194,7 +227,7 @@ export default function DashboardFeed(props) {
                 <p className="text-xs text-gray-400">
                   {moment(data.created).format("DD/MM/YYYY")}
                 </p>
-                <p className="text-xs ">{data.email}</p>
+                {/* <p className="text-xs ">{data.email}</p> */}
               </div>
             </div>
             <Dropdown
