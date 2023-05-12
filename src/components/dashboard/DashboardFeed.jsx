@@ -74,10 +74,10 @@ export default function DashboardFeed(props) {
     setIsModalOpen(false);
   };
   const goFolderPage = (folderId) =>
-  navigate({
-    pathname: '/folder',
-    search: `?folderId=${folderId}`,
-  });
+    navigate({
+      pathname: "/folder",
+      search: `?folderId=${folderId}`,
+    });
   // const { toasts, handlers } = useToast();
   // console.log(imageList);
   useEffect(() => {
@@ -308,60 +308,65 @@ export default function DashboardFeed(props) {
           <div
             className="bg-slate-300 w-32 h-32 text-center flex justify-center items-center rounded-xl border font-semibold"
             key={index}
-            onClick={()=>goFolderPage(data.id)}
+            onClick={() => goFolderPage(data.id)}
           >
             <NavLink>{data.name}</NavLink>
           </div>
         ))}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {imageList?.items.map((data, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center bg-white p-2 border rounded-md"
-          >
-            <div
-              onClick={() =>
-                openInNewTab(
-                  getImageURL(data.collectionId, data.id, data.image)
-                )
-              }
-              className="flex gap-2 items-center cursor-pointer "
+        {imageList?.items.map((data, index) => {
+          if(!data.folderId){
+
+            return(
+              <div
+              key={index}
+              className="flex justify-between items-center bg-white p-2 border rounded-md"
             >
-              <img
-                src={getImageURL(data.collectionId, data.id, data.image, 100)}
-                alt=""
-                className="w-36 h-36 mr-2"
-              />
-              <div className="">
-                <p className="font-semibold text-sm">{data.title}</p>
-                <p className="text-xs text-gray-400">
-                  {moment(data.created).format("DD/MM/YYYY")}
-                </p>
-                {/* <p className="text-xs ">{data.email}</p> */}
+              <div
+                onClick={() =>
+                  openInNewTab(
+                    getImageURL(data.collectionId, data.id, data.image)
+                  )
+                }
+                className="flex gap-2 items-center cursor-pointer "
+              >
+                <img
+                  src={getImageURL(data.collectionId, data.id, data.image, 100)}
+                  alt=""
+                  className="w-36 h-36 mr-2"
+                />
+                <div className="">
+                  <p className="font-semibold text-sm">{data.title}</p>
+                  <p className="text-xs text-gray-400">
+                    {moment(data.created).format("DD/MM/YYYY")}
+                  </p>
+                  {/* <p className="text-xs ">{data.email}</p> */}
+                </div>
               </div>
+              <Dropdown
+                menu={
+                  currentUser?.model.id === data.uploader
+                    ? {
+                        items: items,
+                        onClick: (e) => handleMenuClick(e, data),
+                      }
+                    : {
+                        items: items1,
+                        onClick: (e) => handleMenuClick(e, data),
+                      }
+                }
+                trigger={["click"]}
+                className="cursor-pointer"
+              >
+                <a onClick={(e) => e.preventDefault()}>
+                  <EllipsisOutlined />
+                </a>
+              </Dropdown>
             </div>
-            <Dropdown
-              menu={
-                currentUser?.model.id === data.uploader
-                  ? {
-                      items: items,
-                      onClick: (e) => handleMenuClick(e, data),
-                    }
-                  : {
-                      items: items1,
-                      onClick: (e) => handleMenuClick(e, data),
-                    }
-              }
-              trigger={["click"]}
-              className="cursor-pointer"
-            >
-              <a onClick={(e) => e.preventDefault()}>
-                <EllipsisOutlined />
-              </a>
-            </Dropdown>
-          </div>
-        ))}
+            )
+          }
+        })}
       </div>
       <Pagination
         pageSize={page.pageSize}
