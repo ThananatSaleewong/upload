@@ -1,12 +1,22 @@
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import pb from "../../lib/pocketbase";
-import { getImageURL, copyUrl, getImageURLFull } from "../../lib/utils";
+import pb from "../lib/pocketbase";
+import {
+  getImageURL,
+  copyUrl,
+  getImageURLFull,
+  // getImageURLfolder,
+} from "../lib/utils";
 import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { Dropdown, Pagination, Button, Modal, Input, Form } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 const items = [
@@ -32,71 +42,48 @@ const data = {
   uploadId: ["RELATION_RECORD_ID"],
   createdById: "RELATION_RECORD_ID",
 };
-export default function DashboardFeed(props) {
+export default function FolderPage() {
+  const currentUser = JSON.parse(localStorage.getItem("pocketbase_auth"));
+  // console.log(currentUser)
+  const [searchParams] = useSearchParams();
+  // console.log(searchParams.get("folderId"));
   const location = useLocation();
   // console.log(location.search);
   let navigate = useNavigate();
   const isLoggedIn = pb.authStore.isValid;
-  const searchParams = new URLSearchParams(document.location.search);
+  // const searchParams = new URLSearchParams(document.location.search);
   // console.log(searchParams.get("p"));
 
-  const { currentUser } = props;
-  console.log(currentUser);
-
-  const [imageList, setImageList] = useState(null);
-  const [folderList, setFolderList] = useState(null);
+  const [imageList, setImageList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState({ page: 1, pageSize: 24 });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
+  const [folderData, setFolderData] = useState(null);
+  console.log(folderData);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = async (e) => {
-    setLoading(true);
-    setIsModalOpen(false);
-    const data = {
-      name: e.name,
-      // uploadId: ["RELATION_RECORD_ID"],
-      createdById: currentUser.model.id,
-    };
-    console.log(e);
-    try {
-      const record = await pb.collection("folders").create(data);
-      window.location.reload();
-    } catch {}
-    setLoading(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  const goFolderPage = (folderId) =>
-  navigate({
-    pathname: '/folder',
-    search: `?folderId=${folderId}`,
-  });
-  // const { toasts, handlers } = useToast();
-  // console.log(imageList);
   useEffect(() => {
-    fetchImageData();
     fetchFolderData();
   }, [page]);
+
+  // useEffect(() => {
+  //   fetchImageData();
+  // }, [folderData]);
+
+  console.log(loading);
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
   };
+
   const fetchFolderData = async (event) => {
     setLoading(true);
+    // let folderData = null;
     try {
-      const resultList = await pb
+      const record = await pb
         .collection("folders")
-        .getList(page.page, page.pageSize, {
-          sort: "-created",
+        .getOne(searchParams.get("folderId"), {
+          expand: "relField1,relField2.subRelField",
         });
-      setFolderList(resultList);
-      console.log(resultList);
+      // folderData = record;
+      setFolderData(record);
     } catch (err) {
       toast.success(err, {
         position: "bottom-right",
@@ -109,17 +96,25 @@ export default function DashboardFeed(props) {
         theme: "dark",
       });
     }
-    setLoading(false);
+    console.log(imageList);
+
+    console.log(folderData);
+    // fetchImageData(folderData);
   };
-  const fetchImageData = async (event) => {
-    setLoading(true);
+
+  const fetchImageData = async () => {
+    console.log("in");
+    // folderData?.uploadId.forEach(async (data) => {
     try {
-      const resultList = await pb
-        .collection("upload")
-        .getList(page.page, page.pageSize, {
-          sort: "-created",
-        });
-      setImageList(resultList);
+      // const record = await pb.collection("upload").getOne(data, {
+      //   expand: "relField1,relField2.subRelField",
+      // });
+      const resultList = await pb.collection("upload").getList(1, 50, {
+        filter: 'id="if27s0xy5tap08i"',
+      });
+      // console.log(resultList.items)
+      imageList.push(resultList.items);
+      // setImageList(resultList);
     } catch (err) {
       toast.success(err, {
         position: "bottom-right",
@@ -132,6 +127,7 @@ export default function DashboardFeed(props) {
         theme: "dark",
       });
     }
+    // });
     setLoading(false);
   };
 
@@ -140,7 +136,7 @@ export default function DashboardFeed(props) {
     try {
       const deleteImg = await pb.collection("upload").delete(targetImg);
       toast.success("Deleted !");
-      await fetchImageData();
+      await fetchFolderData();
     } catch (error) {
       toast.error("asdasd", {
         duration: 3000,
@@ -160,15 +156,35 @@ export default function DashboardFeed(props) {
       formData.append("title", files[0].name);
       formData.append("uploader", currentUser?.model.id);
       formData.append("email", currentUser?.model.email);
+      formData.append("folderId", searchParams.get("folderId"));
       setLoading(true);
       toastId;
-      console.log(formData);
       try {
         const res = await pb.collection("upload").create(formData);
+        console.log(res);
+        const record = await pb
+          .collection("folders")
+          .update(searchParams.get("folderId"), {
+            uploadId: [res.id],
+            imageList: folderData?.imageList
+              ? folderData?.imageList.concat([
+                  {
+                    name: res.image[0],
+                    image_id: res.id,
+                  },
+                ])
+              : [
+                  {
+                    name: res.image[0],
+                    image_id: res.id,
+                  },
+                ],
+          });
         toast.success("Successfully toasted!");
+        // setImageList();
         //1. Diable button
         //2. Change button content to Loading blah blah
-        await fetchImageData();
+        await fetchFolderData();
       } catch (error) {
         console.log(error);
         const errorMessage = error.data.data.image.message || "Unknown error";
@@ -196,7 +212,7 @@ export default function DashboardFeed(props) {
           toast.success("Successfully toasted!");
           //1. Diable button
           //2. Change button content to Loading blah blah
-          fetchImageData();
+          fetchFolderData();
         } catch (error) {
           console.log(error);
           const errorMessage = error.data.data.image.message || "Unknown error";
@@ -215,12 +231,12 @@ export default function DashboardFeed(props) {
     const resultList = await pb.collection("upload").getList(1, 50, {
       filter: `folderId = "tc23lbrptbbtx6r"`,
     });
-    console.log(resultList);
+    // console.log(resultList)
   })();
 
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
-      copyUrl(getImageURLFull(data.collectionId, data.id, data.image));
+      copyUrl(getImageURLFull("3turja16y46j51j", data.id, data.image));
       toast.success(`คัดลอกลิงค์ ${data.title} แล้ว`, {
         position: "bottom-right",
         autoClose: 3000,
@@ -253,69 +269,16 @@ export default function DashboardFeed(props) {
         <p className="text-3xl font-bold leading-3 -mt-2 ">+</p>
         <input
           type="file"
-          disabled={loading}
+          // disabled={loading}
           className="hidden"
           onChange={(event) => handleChange(event)}
           accept="image/png, image/jpg, image/jpeg, image/gif, image/webp, image/svg"
           multiple
         />
       </label>
-
       {/* Image grid loop */}
-
-      <Button
-        type="primary"
-        onClick={showModal}
-        className="text-black border-blue-500"
-      >
-        Create Folder
-      </Button>
-      <Modal
-        title="Create Folder"
-        open={isModalOpen}
-        // onOk={handleOk}
-        onCancel={handleCancel}
-        footer={
-          [
-            // <Button key="back" onClick={handleCancel} className="">
-            //   Cancel
-            // </Button>,
-          ]
-        }
-      >
-        <Form onFinish={handleOk}>
-          <Form.Item name="name">
-            <Input placeholder="create folder name" />
-          </Form.Item>
-          <div className="flex justify-end space-x-3">
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="text-black border-blue-500 font-semibold"
-              >
-                Submit
-              </Button>
-            </Form.Item>
-            <Button key="back" onClick={handleCancel} className="">
-              Cancel
-            </Button>
-          </div>
-        </Form>
-      </Modal>
-      <div className="flex space-x-4">
-        {folderList?.items.map((data, index) => (
-          <div
-            className="bg-slate-300 w-32 h-32 text-center flex justify-center items-center rounded-xl border font-semibold"
-            key={index}
-            onClick={()=>goFolderPage(data.id)}
-          >
-            <NavLink>{data.name}</NavLink>
-          </div>
-        ))}
-      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {imageList?.items.map((data, index) => (
+        {folderData?.imageList?.map((data, index) => (
           <div
             key={index}
             className="flex justify-between items-center bg-white p-2 border rounded-md"
@@ -323,13 +286,19 @@ export default function DashboardFeed(props) {
             <div
               onClick={() =>
                 openInNewTab(
-                  getImageURL(data.collectionId, data.id, data.image)
+                  getImageURL("3turja16y46j51j", data.image_id, data.name)
                 )
               }
               className="flex gap-2 items-center cursor-pointer "
             >
               <img
-                src={getImageURL(data.collectionId, data.id, data.image, 100)}
+                src={getImageURL(
+                  "3turja16y46j51j",
+                  data.image_id,
+                  data.name,
+                  // data.uploadId,
+                  100
+                )}
                 alt=""
                 className="w-36 h-36 mr-2"
               />
@@ -338,7 +307,6 @@ export default function DashboardFeed(props) {
                 <p className="text-xs text-gray-400">
                   {moment(data.created).format("DD/MM/YYYY")}
                 </p>
-                {/* <p className="text-xs ">{data.email}</p> */}
               </div>
             </div>
             <Dropdown

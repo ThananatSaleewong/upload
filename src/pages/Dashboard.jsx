@@ -73,6 +73,7 @@ function Dashboard() {
           </a>
         </Dropdown>
       </header>
+ 
       <DashboardFeed currentUser={currentUser} />
     </div>
   );

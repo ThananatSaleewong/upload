@@ -11,3 +11,4 @@ export const copyUrl = (target) => {
   copy(target);
   // alert('copied')
 };
+  
