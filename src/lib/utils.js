@@ -10,6 +10,6 @@ export const getImageURLFull = (collectionId, recordId, fileName) => {
 
 export const copyUrl = (target) => {
   copy(target);
-  // alert('copied')
+  // alert('copied') 
 };
   
