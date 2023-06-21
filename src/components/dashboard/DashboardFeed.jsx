@@ -9,6 +9,7 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 const items = [
   {
     key: "1",
@@ -33,14 +34,11 @@ const data = {
   createdById: "RELATION_RECORD_ID",
 };
 
-
-
 export default function DashboardFeed(props) {
   const location = useLocation();
   let navigate = useNavigate();
   const isLoggedIn = pb.authStore.isValid;
   const searchParams = new URLSearchParams(document.location.search);
-
   const { currentUser } = props;
   const [imageList, setImageList] = useState(null);
   const [folderList, setFolderList] = useState(null);

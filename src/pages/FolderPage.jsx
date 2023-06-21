@@ -59,6 +59,7 @@ export default function FolderPage() {
   const [page, setPage] = useState({ page: 1, pageSize: 24 });
   const [folderData, setFolderData] = useState(null);
 
+  console.log(location)
   useEffect(() => {
     fetchFolderData();
   }, [page]);
@@ -258,7 +259,7 @@ export default function FolderPage() {
   }
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
-      copyUrl(getImageURLFull("3turja16y46j51j", data.id, data.image));
+      copyUrl(getImageURLFull("3turja16y46j51j",data.image_id,data.name));
       toast.success(`คัดลอกลิงค์ ${data.title} แล้ว`, {
         position: "bottom-right",
         autoClose: 3000,
