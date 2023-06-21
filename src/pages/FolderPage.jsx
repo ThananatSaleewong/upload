@@ -257,9 +257,9 @@ export default function FolderPage() {
       setLoading(false);
     }
   }
-   const handleMenuClick = async(e, data) => {
+   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
-      await copyUrl(getImageURLFull("3turja16y46j51j",data.image_id,data.name));
+       copyUrl(getImageURLFull("3turja16y46j51j",data.image_id,data.name));
       toast.success(`คัดลอกลิงค์ ${data.title} แล้ว`, {
         position: "bottom-right",
         autoClose: 3000,
