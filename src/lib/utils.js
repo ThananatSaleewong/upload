@@ -1,6 +1,6 @@
 import copy from "copy-to-clipboard";
 
-export const getImageURL = (collectionId, recordId, fileName, size = "0x0") => {
+export const getImageURL = (collectionId, recordId, fileName, size = "100x100") => {
   return `https://pb.bethub.link/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
 };
 export const getImageURLFull = (collectionId, recordId, fileName) => {
