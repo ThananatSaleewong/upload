@@ -58,7 +58,6 @@ export default function FolderPage() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState({ page: 1, pageSize: 24 });
   const [folderData, setFolderData] = useState(null);
-  console.log(folderData);
 
   useEffect(() => {
     fetchFolderData();
@@ -68,7 +67,6 @@ export default function FolderPage() {
   //   fetchImageData();
   // }, [folderData]);
 
-  console.log(loading);
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
   };
@@ -149,6 +147,7 @@ export default function FolderPage() {
   async function handleChange(event) {
     console.log(event.target.files.fileList);
     const { files } = event.target;
+    let newUploadMultifiles = [];
     if (files.length === 1) {
       const toastId = toast.loading("Loading...");
       const formData = new FormData();
@@ -161,7 +160,6 @@ export default function FolderPage() {
       toastId;
       try {
         const res = await pb.collection("upload").create(formData);
-        console.log(res);
         const record = await pb
           .collection("folders")
           .update(searchParams.get("folderId"), {
@@ -197,43 +195,67 @@ export default function FolderPage() {
       toast.dismiss(toastId);
     }
     if (files.length > 1) {
+      setLoading(true);
       Array.from(files).map((data, index) => {
-        console.log(data);
         const toastId = toast.loading("Loading...");
         const formData = new FormData();
-        formData.append("image", files[index]);
-        formData.append("title", files[index].name);
+        formData.append("image", data);
+        formData.append("title", data.name);
         formData.append("uploader", currentUser?.model.id);
         formData.append("email", currentUser?.model.email);
-        setLoading(true);
+        formData.append("folderId", searchParams.get("folderId"));
         toastId;
-        try {
-          const res = pb.collection("upload").create(formData);
-          toast.success("Successfully toasted!");
-          //1. Diable button
-          //2. Change button content to Loading blah blah
-          fetchFolderData();
-        } catch (error) {
-          console.log(error);
-          const errorMessage = error.data.data.image.message || "Unknown error";
-          toast.error(errorMessage, {
-            duration: 3000,
-            className: "bg-red-100 p-4 font-semebold",
+        // try {
+        const res = pb
+          .collection("upload")
+          .create(formData)
+          .then((response) => {
+            toast.success("Successfully toasted!");
+            newUploadMultifiles.push({
+              name: response.image[0],
+              image_id: response.id,
+            });
+            if (files.length === index + 1) {
+              console.log(newUploadMultifiles);
+              const record = pb
+                .collection("folders")
+                .update(searchParams.get("folderId"), {
+                  uploadId: folderData?.uploadId,
+                  imageList: folderData?.imageList.concat(newUploadMultifiles),
+                })
+                .then(() => fetchFolderData());
+            }
+          })
+          .catch((error) => {
+            const errorMessage =
+              error.data.data.image.message || "Unknown error";
+            toast.error(errorMessage, {
+              duration: 3000,
+              className: "bg-red-100 p-4 font-semebold",
+            });
           });
-        }
-        setLoading(false);
         toast.dismiss(toastId);
+        // } catch (error) {
+        //   console.log(error);
+        //   const errorMessage = error.data.data.image.message || "Unknown error";
+        //   toast.error(errorMessage, {
+        //     duration: 3000,
+        //     className: "bg-red-100 p-4 font-semebold",
+        //   });
+        // }
+        // toast.dismiss(toastId);
       });
+      // if (status === "done") {
+      console.log(newUploadMultifiles);
+      // const record = await pb
+      //   .collection("folders")
+      //   .update(searchParams.get("folderId"), {
+      //     uploadId: [newUploadMultifiles[0].image_id],
+      //     imageList: folderData?.imageList.concat(newUploadMultifiles),
+      //   });
+      setLoading(false);
     }
   }
-
-  (async function () {
-    const resultList = await pb.collection("upload").getList(1, 50, {
-      filter: `folderId = "tc23lbrptbbtx6r"`,
-    });
-    // console.log(resultList)
-  })();
-
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
       copyUrl(getImageURLFull("3turja16y46j51j", data.id, data.image));

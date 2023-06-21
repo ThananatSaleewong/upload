@@ -8,7 +8,7 @@ import { Dropdown, Pagination, Button, Modal, Input, Form } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 const items = [
   {
     key: "1",
@@ -32,23 +32,23 @@ const data = {
   uploadId: ["RELATION_RECORD_ID"],
   createdById: "RELATION_RECORD_ID",
 };
+
+
+
 export default function DashboardFeed(props) {
   const location = useLocation();
-  // console.log(location.search);
   let navigate = useNavigate();
   const isLoggedIn = pb.authStore.isValid;
   const searchParams = new URLSearchParams(document.location.search);
-  // console.log(searchParams.get("p"));
 
   const { currentUser } = props;
-  console.log(currentUser);
-
   const [imageList, setImageList] = useState(null);
   const [folderList, setFolderList] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState({ page: 1, pageSize: 24 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
+
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -246,6 +246,24 @@ export default function DashboardFeed(props) {
     setPage({ ...page, page: 1, pageSize: size });
   };
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    // Reorder the items
+    const startIndex = result.source.index;
+    const endIndex = result.destination.index;
+    const updatedItems = Array.from(imageList.items);
+    const [removed] = updatedItems.splice(startIndex, 1);
+    updatedItems.splice(endIndex, 0, removed);
+
+    // Update the state with the new order
+    setImageList({ ...imageList, items: updatedItems });
+  };
+
+  // ...
+
   return (
     <div className="p-4 space-y-4">
       {/* Dropzone file upload */}
@@ -304,25 +322,47 @@ export default function DashboardFeed(props) {
         </Form>
       </Modal>
       <div className="flex space-x-4">
-        {folderList?.items.map((data, index) => (
-          <div
-            className="bg-slate-300 w-32 h-32 text-center flex justify-center items-center rounded-xl border font-semibold"
-            key={index}
-            onClick={() => goFolderPage(data.id)}
-          >
-            <NavLink>{data.name}</NavLink>
-          </div>
-        ))}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="folders">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps} className="flex space-x-4">
+                {folderList?.items.map((data, index) => (
+                  <Draggable key={data.id} draggableId={data.id} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="bg-slate-300 w-32 h-32 text-center flex justify-center items-center rounded-xl border font-semibold"
+                        onClick={() => goFolderPage(data.id)}
+                      >
+                        <NavLink>{data.name}</NavLink>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {imageList?.items.map((data, index) => {
-          if(!data.folderId){
-
-            return(
-              <div
-              key={index}
-              className="flex justify-between items-center bg-white p-2 border rounded-md"
-            >
+      <div className="">
+      <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="images">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                {imageList?.items.map((data, index) => {
+                  if (!data.folderId) {
+                    return (
+                      <Draggable key={data.id} draggableId={data.id} index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="flex justify-between items-center bg-white p-2 border rounded-md"
+                          >
               <div
                 onClick={() =>
                   openInNewTab(
@@ -341,7 +381,6 @@ export default function DashboardFeed(props) {
                   <p className="text-xs text-gray-400">
                     {moment(data.created).format("DD/MM/YYYY")}
                   </p>
-                  {/* <p className="text-xs ">{data.email}</p> */}
                 </div>
               </div>
               <Dropdown
@@ -363,10 +402,17 @@ export default function DashboardFeed(props) {
                   <EllipsisOutlined />
                 </a>
               </Dropdown>
-            </div>
-            )
-          }
-        })}
+              </div>
+                        )}
+                      </Draggable>
+                    );
+                  }
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
       <Pagination
         pageSize={page.pageSize}

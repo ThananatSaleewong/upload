@@ -3,7 +3,24 @@ import { getImageURL, getImageURLFull } from "../../lib/utils";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+const items = [
+  {
+    key: "1",
+    label: <div>Copy</div>,
+  },
+  {
+    key: "2",
+    label: <div>Delete</div>,
+  },
+];
 
+const items1 = [
+  {
+    key: "1",
+    label: <div>Copy</div>,
+  },
+];
 const CustomImage = ({ record, currentUser, index = 0 }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +33,20 @@ const CustomImage = ({ record, currentUser, index = 0 }) => {
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noreferrer");
   };
-
+  const handleDeleteImage = async (targetImg) => {
+    const toastId = toast.loading("Loading...");
+    try {
+      const deleteImg = await pb.collection("upload").delete(targetImg);
+      toast.success("Deleted !");
+      await fetchImageData();
+    } catch (error) {
+      toast.error("asdasd", {
+        duration: 3000,
+        className: "bg-red-100 p-4 font-semebold",
+      });
+    }
+    toast.dismiss(toastId);
+  };
   const handleMenuClick = (e, data) => {
     if (e.key === "1") {
       copyUrl(getImageURLFull(data.collectionId, data.id, data.image));
