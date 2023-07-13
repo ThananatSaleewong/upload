@@ -8,7 +8,7 @@ import { Dropdown, Pagination, Button, Modal, Input, Form } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const items = [
   {
@@ -46,7 +46,6 @@ export default function DashboardFeed(props) {
   const [page, setPage] = useState({ page: 1, pageSize: 24 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
-
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -272,7 +271,7 @@ export default function DashboardFeed(props) {
           disabled={loading}
           className="hidden"
           onChange={(event) => handleChange(event)}
-          accept="image/png, image/jpg, image/jpeg, image/gif, image/webp, image/svg"
+          // accept="image/png, image/jpg, image/jpeg, image/gif, image/webp, image/svg"
           multiple
         />
       </label>
@@ -319,11 +318,15 @@ export default function DashboardFeed(props) {
           </div>
         </Form>
       </Modal>
-      <div className="flex space-x-4">
+      <div className="flex ">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="folders">
             {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps} className="flex space-x-4">
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="grid grid-cols-8 space-x-2 "
+              >
                 {folderList?.items.map((data, index) => (
                   <Draggable key={data.id} draggableId={data.id} index={index}>
                     {(provided) => (
@@ -346,14 +349,22 @@ export default function DashboardFeed(props) {
         </DragDropContext>
       </div>
       <div className="">
-      <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="images">
             {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="grid grid-cols-1 md:grid-cols-1 gap-2"
+              >
                 {imageList?.items.map((data, index) => {
                   if (!data.folderId) {
                     return (
-                      <Draggable key={data.id} draggableId={data.id} index={index}>
+                      <Draggable
+                        key={data.id}
+                        draggableId={data.id}
+                        index={index}
+                      >
                         {(provided) => (
                           <div
                             ref={provided.innerRef}
@@ -361,46 +372,61 @@ export default function DashboardFeed(props) {
                             {...provided.dragHandleProps}
                             className="flex justify-between items-center bg-white p-2 border rounded-md"
                           >
-              <div
-                onClick={() =>
-                  openInNewTab(
-                    getImageURL(data.collectionId, data.id, data.image)
-                  )
-                }
-                className="flex gap-2 items-center cursor-pointer "
-              >
-                <img
-                  src={getImageURL(data.collectionId, data.id, data.image, 100)}
-                  alt=""
-                  className="w-36 h-36 mr-2"
-                />
-                <div className="">
-                  <p className="font-semibold text-sm">{data.title}</p>
-                  <p className="text-xs text-gray-400">
-                    {moment(data.created).format("DD/MM/YYYY")}
-                  </p>
-                </div>
-              </div>
-              <Dropdown
-                menu={
-                  currentUser?.model.id === data.uploader
-                    ? {
-                        items: items,
-                        onClick: (e) => handleMenuClick(e, data),
-                      }
-                    : {
-                        items: items1,
-                        onClick: (e) => handleMenuClick(e, data),
-                      }
-                }
-                trigger={["click"]}
-                className="cursor-pointer"
-              >
-                <a onClick={(e) => e.preventDefault()}>
-                  <EllipsisOutlined />
-                </a>
-              </Dropdown>
-              </div>
+                            <div
+                              onClick={() =>
+                                openInNewTab(
+                                  getImageURL(
+                                    data.collectionId,
+                                    data.id,
+                                    data.image
+                                  )
+                                )
+                              }
+                              className="flex gap-2 items-center cursor-pointer "
+                            >
+                              <img
+                                src={
+                                  data.image
+                                    ? getImageURL(
+                                        data.collectionId,
+                                        data.id,
+                                        data.image,
+                                        100
+                                      )
+                                    : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/833px-PDF_file_icon.svg.png"
+                                }
+                                alt=""
+                                className="w-20 h-20 mr-2"
+                              />
+                              <div className="">
+                                <p className="font-semibold text-sm">
+                                  {data.title}
+                                </p>
+                                <p className="text-xs text-gray-400">
+                                  {moment(data.created).format("DD/MM/YYYY")}
+                                </p>
+                              </div>
+                            </div>
+                            <Dropdown
+                              menu={
+                                currentUser?.model.id === data.uploader
+                                  ? {
+                                      items: items,
+                                      onClick: (e) => handleMenuClick(e, data),
+                                    }
+                                  : {
+                                      items: items1,
+                                      onClick: (e) => handleMenuClick(e, data),
+                                    }
+                              }
+                              trigger={["click"]}
+                              className="cursor-pointer"
+                            >
+                              <a onClick={(e) => e.preventDefault()}>
+                                <EllipsisOutlined />
+                              </a>
+                            </Dropdown>
+                          </div>
                         )}
                       </Draggable>
                     );
